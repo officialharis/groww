@@ -1,9 +1,7 @@
-// Centralized API configuration
 const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '/api'
-  : 'http://localhost:5001/api';
+  : 'http://localhost:5000/api';
 
-// Helper function to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem('groww_token');
   return {
@@ -12,7 +10,6 @@ const getAuthHeaders = () => {
   };
 };
 
-// Generic API request function
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const config = {
@@ -35,7 +32,7 @@ const apiRequest = async (endpoint, options = {}) => {
   }
 };
 
-// Auth API
+
 export const authAPI = {
   login: (email, password) =>
     apiRequest('/auth/login', {
@@ -54,7 +51,7 @@ export const authAPI = {
   verifyToken: () => apiRequest('/user/profile')
 };
 
-// Stocks API
+
 export const stocksAPI = {
   getAll: (params = {}) => {
     const queryParams = new URLSearchParams(params);
@@ -77,7 +74,7 @@ export const stocksAPI = {
   getSectors: () => apiRequest('/stocks/meta/sectors')
 };
 
-// Portfolio API
+
 export const portfolioAPI = {
   getHoldings: () => apiRequest('/portfolio'),
 
@@ -96,7 +93,7 @@ export const portfolioAPI = {
   getTransactions: () => apiRequest('/transactions')
 };
 
-// Watchlist API
+
 export const watchlistAPI = {
   get: () => apiRequest('/watchlist'),
 
@@ -112,7 +109,7 @@ export const watchlistAPI = {
     })
 };
 
-// Payment API (for future Razorpay integration)
+
 export const paymentAPI = {
   createOrder: (amount) => 
     apiRequest('/payment/create-order', {
@@ -132,6 +129,4 @@ export const paymentAPI = {
       body: JSON.stringify({ amount, paymentId })
     })
 };
-
-// Export the base URL for any custom requests
 export { API_BASE_URL };

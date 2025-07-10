@@ -19,6 +19,14 @@ const Stocks = () => {
     try {
       const stocksData = await stocksService.getStocks();
       setStocks(stocksData);
+
+      // Preload stock images for better performance
+      stocksData.forEach(stock => {
+        if (stock.logo) {
+          const img = new Image();
+          img.src = stock.logo;
+        }
+      });
     } catch (error) {
       console.error('Error loading stocks:', error);
     } finally {
@@ -51,58 +59,58 @@ const Stocks = () => {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Stocks</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Discover and invest in your favorite companies</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Stocks</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Discover and invest in your favorite companies</p>
         </div>
         <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
           <TrendingUp className="w-4 h-4" />
-          <span>Market is Open</span>
+          <span className="hidden sm:inline">Market is Open</span>
+          <span className="sm:hidden">Open</span>
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex-1 min-w-64">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search stocks..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent"
-              />
-            </div>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Search - Full Width on Mobile */}
+          <div className="relative col-span-full sm:col-span-2">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search stocks..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent min-h-[44px]"
+            />
           </div>
 
-          <div className="flex items-center space-x-4">
-            <select
-              value={selectedSector}
-              onChange={(e) => setSelectedSector(e.target.value)}
-              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent"
-            >
-              {sectors.map(sector => (
-                <option key={sector} value={sector}>{sector}</option>
-              ))}
-            </select>
+          {/* Sector Filter */}
+          <select
+            value={selectedSector}
+            onChange={(e) => setSelectedSector(e.target.value)}
+            className="px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent min-h-[44px] text-sm sm:text-base"
+          >
+            {sectors.map(sector => (
+              <option key={sector} value={sector}>{sector}</option>
+            ))}
+          </select>
 
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent"
-            >
-              <option value="name">Sort by Name</option>
-              <option value="price">Sort by Price</option>
-              <option value="change">Sort by Change</option>
-              <option value="marketCap">Sort by Market Cap</option>
-            </select>
-          </div>
+          {/* Sort Filter */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent min-h-[44px] text-sm sm:text-base"
+          >
+            <option value="name">Sort by Name</option>
+            <option value="price">Sort by Price</option>
+            <option value="change">Sort by Change</option>
+            <option value="marketCap">Sort by Market Cap</option>
+          </select>
         </div>
       </div>
 
@@ -120,7 +128,7 @@ const Stocks = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredStocks.map((stock) => (
                 <StockCard key={stock.symbol} stock={stock} />
               ))}

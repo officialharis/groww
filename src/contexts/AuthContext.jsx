@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '/api'
-  : 'http://localhost:5001/api';
+  : 'http://localhost:5000/api';
 
 const AuthContext = createContext();
 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         localStorage.setItem('groww_user', JSON.stringify(userData));
       } else {
-        // Token is invalid, clear storage
+
         localStorage.removeItem('groww_user');
         localStorage.removeItem('groww_token');
         setUser(null);
@@ -46,13 +46,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // Check for existing session
+
     const savedUser = localStorage.getItem('groww_user');
     const savedToken = localStorage.getItem('groww_token');
 
     if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
-      // Verify token with backend
+
       verifyToken(savedToken);
     }
     setLoading(false);
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
   const updateBalance = async (newBalance) => {
     if (user) {
       try {
-        // Update balance on backend
+
         const token = localStorage.getItem('groww_token');
         const response = await fetch('http://localhost:5000/api/user/profile', {
           method: 'PUT',
@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Balance update error:', error);
-        // Still update locally as fallback
+
         const updatedUser = { ...user, balance: newBalance };
         setUser(updatedUser);
         localStorage.setItem('groww_user', JSON.stringify(updatedUser));

@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '/api'
-  : 'http://localhost:5001/api';
+  : 'http://localhost:5000/api';
 
 const PortfolioContext = createContext();
 
@@ -25,7 +25,7 @@ export const PortfolioProvider = ({ children }) => {
     if (user) {
       loadPortfolioData();
     } else {
-      // Clear data when user logs out
+
       setHoldings([]);
       setWatchlist([]);
       setTransactions([]);
@@ -45,7 +45,7 @@ export const PortfolioProvider = ({ children }) => {
       const token = localStorage.getItem('groww_token');
       if (!token) return;
 
-      // Load holdings
+
       const holdingsResponse = await fetch(`${API_BASE_URL}/portfolio`, {
         headers: getAuthHeaders()
       });
@@ -54,14 +54,14 @@ export const PortfolioProvider = ({ children }) => {
         setHoldings(holdingsData);
       }
 
-      // Load watchlist
+
       const watchlistResponse = await fetch(`${API_BASE_URL}/watchlist`, {
         headers: getAuthHeaders()
       });
       if (watchlistResponse.ok) {
         const watchlistData = await watchlistResponse.json();
 
-        // Transform watchlist data to include stock information
+
         const { stocksData } = await import('../data/stocksData');
         const enrichedWatchlist = watchlistData.map(item => {
           const stockInfo = stocksData.find(stock => stock.symbol === item.symbol);
@@ -83,7 +83,7 @@ export const PortfolioProvider = ({ children }) => {
         setWatchlist(enrichedWatchlist);
       }
 
-      // Load transactions
+
       const transactionsResponse = await fetch(`${API_BASE_URL}/transactions`, {
         headers: getAuthHeaders()
       });
@@ -91,7 +91,7 @@ export const PortfolioProvider = ({ children }) => {
         const transactionsData = await transactionsResponse.json();
         const transactions = transactionsData.transactions || transactionsData;
 
-        // Transform transaction data to match frontend expectations
+
         const transformedTransactions = transactions.map(txn => ({
           ...txn,
           id: txn._id || txn.id,
@@ -103,7 +103,7 @@ export const PortfolioProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error loading portfolio data:', error);
-      // Fallback to localStorage (only if user exists and has an ID)
+
       if (user && user.id) {
         const savedHoldings = localStorage.getItem(`holdings_${user.id}`);
         const savedWatchlist = localStorage.getItem(`watchlist_${user.id}`);
@@ -113,7 +113,7 @@ export const PortfolioProvider = ({ children }) => {
         if (savedWatchlist) setWatchlist(JSON.parse(savedWatchlist));
         if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
       } else {
-        // If no user or user ID, clear all data
+
         setHoldings([]);
         setWatchlist([]);
         setTransactions([]);
@@ -144,7 +144,7 @@ export const PortfolioProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error adding to watchlist:', error);
-      // Fallback to local storage
+
       const newWatchlist = [...watchlist];
       if (!newWatchlist.find(item => item.symbol === stock.symbol)) {
         newWatchlist.push(stock);
@@ -171,7 +171,7 @@ export const PortfolioProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error removing from watchlist:', error);
-      // Fallback to local storage
+
       const newWatchlist = watchlist.filter(item => item.symbol !== symbol);
       setWatchlist(newWatchlist);
       if (user) {

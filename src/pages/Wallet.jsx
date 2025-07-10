@@ -17,7 +17,7 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 
 const Wallet = () => {
   const { user, updateBalance } = useAuth();
-  const { transactions: portfolioTransactions } = usePortfolio();
+  const { transactions: portfolioTransactions, loadPortfolioData } = usePortfolio();
   const [showBalance, setShowBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [addFundsAmount, setAddFundsAmount] = useState('');
@@ -26,35 +26,38 @@ const Wallet = () => {
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
-  // Load user-specific transactions from portfolio context
   useEffect(() => {
     if (user && portfolioTransactions) {
-      // For now, show all transactions but format them for wallet display
-      // Later we can filter for wallet-specific transactions when they exist
       const walletTransactions = portfolioTransactions.map(txn => ({
         ...txn,
-        // Convert stock transactions to wallet-friendly format
         description: txn.description ||
           (txn.type === 'BUY' ? `Stock Purchase - ${txn.symbol}` :
            txn.type === 'SELL' ? `Stock Sale - ${txn.symbol}` :
            `${txn.type} Transaction`),
-        // Map transaction types for wallet display
         type: txn.type === 'BUY' ? 'DEBIT' :
               txn.type === 'SELL' ? 'CREDIT' :
               txn.type
       }));
       setTransactions(walletTransactions);
     } else {
-      // If no transactions, show empty array
       setTransactions([]);
     }
   }, [user, portfolioTransactions]);
+
+  const refreshTransactions = async () => {
+    try {
+      if (loadPortfolioData) {
+        await loadPortfolioData();
+      }
+    } catch (error) {
+      console.error('Error refreshing transactions:', error);
+    }
+  };
 
   const handleAddFunds = async () => {
     const amount = parseFloat(addFundsAmount);
     if (amount > 0) {
       try {
-        // Create wallet transaction for fund addition
         const token = localStorage.getItem('groww_token');
         const response = await fetch('http://localhost:5000/api/wallet/add-funds', {
           method: 'POST',
@@ -64,28 +67,26 @@ const Wallet = () => {
           },
           body: JSON.stringify({
             amount: amount,
-            method: 'UPI', // or 'CARD', 'NETBANKING'
+            method: 'UPI', 
             description: 'Funds Added via UPI'
           })
         });
 
         if (response.ok) {
           const data = await response.json();
-          // Update user balance
-          updateBalance(user.balance + amount);
+          updateBalance(data.newBalance);
           setAddFundsAmount('');
           setShowAddFunds(false);
+
           alert('Funds added successfully!');
 
-          // Refresh transactions to show the new transaction
-          window.location.reload(); // Simple refresh for now
+          await refreshTransactions();
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
         }
       } catch (error) {
         console.error('Add funds error:', error);
-        // Fallback to demo mode
         updateBalance(user.balance + amount);
         setAddFundsAmount('');
         setShowAddFunds(false);
@@ -114,21 +115,18 @@ const Wallet = () => {
 
         if (response.ok) {
           const data = await response.json();
-          // Update user balance
-          updateBalance(user.balance - amount);
+          updateBalance(data.newBalance);
           setWithdrawAmount('');
           setShowWithdraw(false);
-          alert('Withdrawal request submitted!');
+          alert('Withdrawal completed successfully!');
 
-          // Refresh transactions to show the new transaction
-          window.location.reload(); // Simple refresh for now
+          await refreshTransactions();
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
         }
       } catch (error) {
         console.error('Withdraw error:', error);
-        // Fallback to demo mode
         updateBalance(user.balance - amount);
         setWithdrawAmount('');
         setShowWithdraw(false);
@@ -157,12 +155,12 @@ const Wallet = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="wallet-content space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Wallet</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your funds and transactions</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Wallet</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Manage your funds and transactions</p>
         </div>
         <div className="flex items-center space-x-3">
           <button
@@ -261,15 +259,15 @@ const Wallet = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+      {/* Wallet Tabs */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 relative z-10">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8 px-6">
+          <div className="flex space-x-4 sm:space-x-8 px-4 sm:px-6 overflow-x-auto wallet-tabs">
             {['overview', 'history'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm capitalize transition-colors ${
+                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm capitalize transition-colors whitespace-nowrap min-h-[44px] flex items-center ${
                   activeTab === tab
                     ? 'border-groww-primary text-groww-primary'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -278,13 +276,13 @@ const Wallet = () => {
                 {tab}
               </button>
             ))}
-          </nav>
+          </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Recent Transactions</h3>
               <div className="space-y-3">
                 {transactions.length === 0 ? (
                   <div className="text-center py-8">
@@ -332,8 +330,8 @@ const Wallet = () => {
           )}
 
           {activeTab === 'history' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction History</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Transaction History</h3>
               <div className="space-y-3">
                 {transactions.length === 0 ? (
                   <div className="text-center py-12">

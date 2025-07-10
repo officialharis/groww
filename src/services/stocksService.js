@@ -2,7 +2,6 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '/api'
   : 'http://localhost:5000/api';
 
-// Fallback stock data in case backend is not available
 const fallbackStocks = [
   {
     symbol: "RELIANCE",
@@ -106,7 +105,7 @@ const fallbackStocks = [
 ];
 
 export const stocksService = {
-  // Get all stocks
+
   async getStocks(params = {}) {
     try {
       const queryParams = new URLSearchParams(params);
@@ -125,7 +124,6 @@ export const stocksService = {
     }
   },
 
-  // Get single stock by symbol
   async getStock(symbol) {
     try {
       const response = await fetch(`${API_BASE_URL}/stocks/${symbol}`);
@@ -133,17 +131,11 @@ export const stocksService = {
       if (response.ok) {
         const stock = await response.json();
         return stock;
-      } else if (response.status === 404) {
-        // Stock not found in backend, try fallback data
-        console.warn(`Stock ${symbol} not found in backend, checking fallback data`);
-        const fallbackStock = fallbackStocks.find(s => s.symbol === symbol);
-        return fallbackStock || null;
       } else {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error('Error fetching stock:', error);
-      // Try fallback data as last resort
       const fallbackStock = fallbackStocks.find(s => s.symbol === symbol);
       if (fallbackStock) {
         console.warn(`Using fallback data for stock ${symbol}`);
@@ -153,7 +145,6 @@ export const stocksService = {
     }
   },
 
-  // Get stock chart data
   async getStockChart(symbol, period = '1M') {
     try {
       const response = await fetch(`${API_BASE_URL}/stocks/${symbol}/chart?period=${period}`);
@@ -162,7 +153,7 @@ export const stocksService = {
         const chartData = await response.json();
         return chartData;
       } else {
-        // Generate fallback chart data
+
         return this.generateFallbackChartData();
       }
     } catch (error) {
@@ -171,7 +162,7 @@ export const stocksService = {
     }
   },
 
-  // Generate fallback chart data
+
   generateFallbackChartData(basePrice = 2500) {
     const data = [];
     const days = 30;
@@ -180,7 +171,7 @@ export const stocksService = {
       const date = new Date();
       date.setDate(date.getDate() - i);
       
-      // Generate random price variation
+
       const variation = (Math.random() - 0.5) * 100;
       const price = basePrice + variation + (Math.random() * 50 - 25);
       
@@ -193,7 +184,7 @@ export const stocksService = {
     return data;
   },
 
-  // Get market indices
+
   async getMarketIndices() {
     try {
       const response = await fetch(`${API_BASE_URL}/market/indices`);
@@ -210,7 +201,7 @@ export const stocksService = {
     }
   },
 
-  // Get trending stocks
+
   async getTrendingStocks(type = 'gainers', limit = 10) {
     try {
       const response = await fetch(`${API_BASE_URL}/market/trending?type=${type}&limit=${limit}`);
@@ -227,7 +218,7 @@ export const stocksService = {
     }
   },
 
-  // Fallback market indices
+
   getFallbackIndices() {
     return [
       {
@@ -258,13 +249,13 @@ export const stocksService = {
   }
 };
 
-// For backward compatibility, export the fallback data as stocksData
+
 export const stocksData = fallbackStocks;
 
-// Export market indices for backward compatibility
+
 export const marketIndices = stocksService.getFallbackIndices();
 
-// Generate chart data function for backward compatibility
+
 export const generateChartData = (basePrice = 2500) => {
   return stocksService.generateFallbackChartData(basePrice);
 };

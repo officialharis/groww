@@ -27,10 +27,8 @@ const StockDetail = () => {
     setLoading(true);
     setError(null);
     try {
-      // First try to get from backend
       let stockData = await stocksService.getStock(symbol);
 
-      // If not found in backend, try static data
       if (!stockData) {
         stockData = stocksData.find(s => s.symbol === symbol);
       }

@@ -8,10 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server/index.js",
-    "seed": "node server/seedData.cjs",
-    "vercel-build": "vite build",
-    "deploy-check": "node deploy.js"
+    "server": "node server-fixed.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -22,6 +19,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.344.0",
     "mongoose": "^8.0.3",
+    "node-fetch": "^3.3.2",
     "razorpay": "^2.9.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

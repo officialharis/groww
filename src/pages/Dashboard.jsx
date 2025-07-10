@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Eye, Plus, ArrowUpRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { TrendingUp, TrendingDown, Eye, Plus, ArrowUpRight, ArrowDownRight, Wallet } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { usePortfolio } from '../contexts/PortfolioContext';
 import { stocksData, marketIndices } from '../data/stocksData';
@@ -11,7 +11,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { holdings, watchlist } = usePortfolio();
   const navigate = useNavigate();
-  const [allStocks, setAllStocks] = useState(stocksData); // Start with static data as fallback
+  const [allStocks, setAllStocks] = useState(stocksData); 
 
   useEffect(() => {
     loadStocks();
@@ -25,7 +25,6 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error('Error loading stocks for dashboard:', error);
-      // Keep using static data as fallback
     }
   };
 
@@ -54,13 +53,13 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-groww-primary to-groww-secondary rounded-2xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">Good morning, {user?.name}! 👋</h1>
-        <p className="text-groww-light">Here's what's happening with your investments today</p>
+      <div className="bg-gradient-to-r from-groww-primary to-groww-secondary rounded-2xl p-4 sm:p-6 text-white">
+        <h1 className="text-xl sm:text-2xl font-bold mb-2">Good morning, {user?.name}! 👋</h1>
+        <p className="text-groww-light text-sm sm:text-base">Here's what's happening with your investments today</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div
           onClick={() => navigate('/portfolio')}
           className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg hover:border-groww-primary transition-all duration-200"

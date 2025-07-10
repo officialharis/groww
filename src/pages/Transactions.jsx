@@ -26,13 +26,10 @@ const Transactions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
-  // Load user-specific transactions from backend
   useEffect(() => {
     if (user && portfolioTransactions) {
-      // Use actual transactions from portfolio context
       setTransactions(portfolioTransactions);
     } else {
-      // If no transactions, show empty array
       setTransactions([]);
     }
   }, [user, portfolioTransactions]);
@@ -137,14 +134,12 @@ const Transactions = () => {
     }
   };
 
-  // Pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTransactions = filteredTransactions.slice(startIndex, endIndex);
 
   const exportTransactions = () => {
-    // In a real app, this would generate and download a CSV/PDF
     const csvContent = filteredTransactions.map(txn => {
       return [
         txn.id,
@@ -170,36 +165,36 @@ const Transactions = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Transaction History</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Transaction History</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
             View and manage all your trading and wallet transactions
           </p>
         </div>
         <button
           onClick={exportTransactions}
-          className="flex items-center space-x-2 px-4 py-2 bg-groww-primary text-white rounded-lg hover:bg-groww-dark transition-colors"
+          className="flex items-center space-x-2 px-4 py-2 bg-groww-primary text-white rounded-lg hover:bg-groww-dark transition-colors min-h-[44px] self-start sm:self-auto"
         >
           <Download className="w-4 h-4" />
-          <span>Export</span>
+          <span className="text-sm sm:text-base">Export</span>
         </button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Search */}
-          <div className="relative">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* Search - Full Width on Mobile */}
+          <div className="relative col-span-full sm:col-span-2">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
               placeholder="Search transactions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white min-h-[44px]"
             />
           </div>
 
@@ -207,7 +202,7 @@ const Transactions = () => {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white min-h-[44px] text-sm sm:text-base"
           >
             <option value="ALL">All Types</option>
             <option value="BUY">Buy Orders</option>
@@ -221,7 +216,7 @@ const Transactions = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white min-h-[44px] text-sm sm:text-base"
           >
             <option value="ALL">All Status</option>
             <option value="COMPLETED">Completed</option>
@@ -233,7 +228,7 @@ const Transactions = () => {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-white min-h-[44px] text-sm sm:text-base"
           >
             <option value="ALL">All Time</option>
             <option value="7D">Last 7 Days</option>
@@ -249,7 +244,7 @@ const Transactions = () => {
               setFilterStatus('ALL');
               setDateRange('ALL');
             }}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-h-[44px] text-sm sm:text-base col-span-full sm:col-span-1"
           >
             Clear Filters
           </button>
@@ -258,11 +253,14 @@ const Transactions = () => {
 
       {/* Transaction List */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
               Transactions ({filteredTransactions.length})
             </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 sm:hidden">
+              Showing {currentTransactions.length} of {filteredTransactions.length}
+            </p>
           </div>
 
           {currentTransactions.length > 0 ? (
@@ -270,34 +268,58 @@ const Transactions = () => {
               {currentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors space-y-3 sm:space-y-0"
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  {/* Mobile Layout */}
+                  <div className="flex items-start space-x-3 flex-1 min-w-0">
+                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg flex-shrink-0">
                       {getTransactionIcon(transaction.type)}
                     </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <p className="font-medium text-gray-900 dark:text-white">
+                    <div className="flex-1 min-w-0">
+                      {/* Title and Status */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">
                           {transaction.symbol ? `${transaction.symbol} - ${transaction.name}` : transaction.description}
                         </p>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium self-start ${getStatusColor(transaction.status)}`}>
                           {transaction.status}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        <span>{formatDate(transaction.date)}</span>
-                        <span>ID: {transaction.id}</span>
+
+                      {/* Transaction Details */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 space-y-1 sm:space-y-0">
+                        <span className="truncate">{formatDate(transaction.date)}</span>
+                        <span className="hidden sm:inline">ID: {transaction.id.slice(-8)}</span>
+                        <span className="sm:hidden">ID: {transaction.id.slice(-6)}</span>
                         {transaction.quantity && (
                           <span>Qty: {transaction.quantity}</span>
                         )}
                       </div>
+
+                      {/* Amount - Mobile */}
+                      <div className="sm:hidden mt-2">
+                        <p className={`font-semibold text-lg ${
+                          ['BUY', 'WITHDRAWAL'].includes(transaction.type)
+                            ? 'text-red-600'
+                            : 'text-green-600'
+                        }`}>
+                          {['BUY', 'WITHDRAWAL'].includes(transaction.type) ? '-' : '+'}
+                          {formatCurrency(transaction.total || transaction.amount)}
+                        </p>
+                        {transaction.fees && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Fees: {formatCurrency(transaction.fees)}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className={`font-semibold ${
-                      ['BUY', 'WITHDRAWAL'].includes(transaction.type) 
-                        ? 'text-red-600' 
+
+                  {/* Amount - Desktop */}
+                  <div className="hidden sm:block text-right flex-shrink-0">
+                    <p className={`font-semibold text-lg ${
+                      ['BUY', 'WITHDRAWAL'].includes(transaction.type)
+                        ? 'text-red-600'
                         : 'text-green-600'
                     }`}>
                       {['BUY', 'WITHDRAWAL'].includes(transaction.type) ? '-' : '+'}
@@ -327,27 +349,27 @@ const Transactions = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+          <div className="border-t border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 text-center sm:text-left">
                 Showing {startIndex + 1} to {Math.min(endIndex, filteredTransactions.length)} of{' '}
                 {filteredTransactions.length} results
               </p>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
+                <span className="px-3 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 min-h-[44px] flex items-center">
                   {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

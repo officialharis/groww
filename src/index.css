@@ -1,3 +1,274 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Stock image loading optimizations */
+.stock-image {
+  transition: opacity 0.2s ease-in-out;
+  will-change: opacity;
+}
+
+.stock-image-loading {
+  opacity: 0;
+}
+
+.stock-image-loaded {
+  opacity: 1;
+}
+
+/* Prevent layout shift during image loading */
+.stock-image-container {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+}
+
+/* Loading spinner for images */
+.image-loading-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(243 244 246);
+  border-radius: 0.5rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dark .image-loading-spinner {
+  background-color: rgb(55 65 81);
+}
+
+/* Smooth image transitions */
+.stock-image {
+  transition: all 0.3s ease-in-out;
+}
+
+.stock-image:hover {
+  transform: scale(1.05);
+}
+
+/* Prevent image flickering */
+.stock-card {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Image optimization */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Mobile transaction improvements */
+@media (max-width: 640px) {
+  .transaction-card {
+    padding: 1rem;
+  }
+
+  .transaction-title {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .transaction-details {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .transaction-amount {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 768px) {
+  .mobile-no-scroll {
+    overflow-x: hidden;
+  }
+
+  .mobile-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobile-full-width {
+    width: 100%;
+  }
+}
+
+/* Search dropdown z-index fix */
+.search-dropdown {
+  z-index: 9999 !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Ensure search results are always visible */
+.navbar-search-container {
+  position: relative;
+  z-index: 9999;
+}
+
+/* Additional z-index hierarchy */
+.navbar {
+  z-index: 50;
+}
+
+.sidebar {
+  z-index: 30;
+}
+
+.search-results {
+  z-index: 9999;
+}
+
+.modal-overlay {
+  z-index: 10000;
+}
+
+.tooltip {
+  z-index: 10001;
+}
+
+/* Navbar specific overrides */
+nav.navbar {
+  z-index: 50 !important;
+  height: 64px !important;
+  position: fixed !important;
+  top: 0 !important;
+}
+
+nav.navbar .navbar-search-container {
+  z-index: 9999 !important;
+}
+
+/* Prevent portfolio tabs from being styled as navbar */
+.portfolio-tabs {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.portfolio-tabs:not(.navbar) {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* Sidebar positioning fix */
+aside.sidebar {
+  top: 64px !important;
+  height: calc(100vh - 64px) !important;
+  z-index: 30 !important;
+}
+
+/* Ensure navbar is always on top and has fixed height */
+nav {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 64px !important;
+  z-index: 50 !important;
+}
+
+/* Prevent sidebar from overlapping navbar */
+.sidebar {
+  margin-top: 0 !important;
+  top: 64px !important;
+}
+
+/* Portfolio tabs styling */
+.portfolio-tabs {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure portfolio tabs don't interfere with navbar */
+.portfolio-tabs button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Portfolio content container */
+.portfolio-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Wallet tabs styling */
+.wallet-tabs {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure wallet tabs don't interfere with navbar */
+.wallet-tabs button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Wallet content container */
+.wallet-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Prevent wallet tabs from being styled as navbar */
+.wallet-tabs:not(.navbar) {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* General rule to prevent page tabs from interfering with navbar */
+.portfolio-tabs:not(.navbar),
+.wallet-tabs:not(.navbar),
+div[class*="-tabs"]:not(.navbar) {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 1 !important;
+}
+
+/* Ensure main navbar always takes precedence */
+nav.navbar {
+  z-index: 50 !important;
+  position: fixed !important;
+  top: 0 !important;
+}
+
+/* Force search dropdown to be on top */
+.navbar-search-container .search-dropdown {
+  z-index: 9999 !important;
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Ensure search dropdown is above navbar */
+nav .navbar-search-container {
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
+/* Override any conflicting z-index */
+.search-dropdown,
+.search-results {
+  z-index: 9999 !important;
+  position: absolute !important;
+}

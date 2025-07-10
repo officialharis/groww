@@ -3,12 +3,10 @@ import {
   TrendingUp,
   TrendingDown,
   ArrowUpRight,
-  Calendar,
   PieChart,
   BarChart3,
   Target,
   DollarSign,
-  Percent,
   Eye,
   EyeOff
 } from 'lucide-react';
@@ -96,24 +94,24 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="portfolio-content space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Portfolio</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Track your investments and performance</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Portfolio</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Track your investments and performance</p>
         </div>
         <button
           onClick={() => setShowValues(!showValues)}
-          className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors min-h-[44px] self-start sm:self-auto"
         >
           {showValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          <span>{showValues ? 'Hide Values' : 'Show Values'}</span>
+          <span className="text-sm sm:text-base">{showValues ? 'Hide Values' : 'Show Values'}</span>
         </button>
       </div>
 
       {/* Portfolio Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3 mb-2">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -257,15 +255,15 @@ const Portfolio = () => {
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+      {/* Portfolio Tabs */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 relative z-10">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8 px-6">
+          <div className="flex space-x-4 sm:space-x-8 px-4 sm:px-6 overflow-x-auto portfolio-tabs">
             {['overview', 'holdings', 'transactions'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm capitalize transition-colors ${
+                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm capitalize transition-colors whitespace-nowrap min-h-[44px] flex items-center ${
                   activeTab === tab
                     ? 'border-groww-primary text-groww-primary'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -274,16 +272,16 @@ const Portfolio = () => {
                 {tab}
               </button>
             ))}
-          </nav>
+          </div>
         </div>
 
         {/* Tab Content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Portfolio Overview</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Portfolio Overview</h3>
               {holdings.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {holdingsWithCurrentPrice.map((holding) => (
                     <div
                       key={holding.symbol}
@@ -338,33 +336,35 @@ const Portfolio = () => {
 
           {activeTab === 'holdings' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Holdings</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Holdings</h3>
 
               {holdingsWithCurrentPrice.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-700">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Stock
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Quantity
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Avg Price
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Current Price
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Current Value
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          P&L
-                        </th>
-                      </tr>
-                    </thead>
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden lg:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Stock
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Quantity
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Avg Price
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Current Price
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Current Value
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            P&L
+                          </th>
+                        </tr>
+                      </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                       {holdingsWithCurrentPrice.map((holding) => (
                         <tr
@@ -416,6 +416,62 @@ const Portfolio = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Mobile Card View */}
+                <div className="lg:hidden space-y-4">
+                  {holdingsWithCurrentPrice.map((holding) => (
+                    <div
+                      key={holding.symbol}
+                      onClick={() => navigate(`/stocks/${holding.symbol}`)}
+                      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg hover:border-groww-primary transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={stocksData.find(s => s.symbol === holding.symbol)?.logo}
+                            alt={holding.symbol}
+                            className="w-10 h-10 rounded-lg object-cover"
+                          />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">{holding.symbol}</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{holding.quantity} shares</p>
+                          </div>
+                        </div>
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          holding.pnl >= 0
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        }`}>
+                          {holding.pnl >= 0 ? '+' : ''}{holding.pnlPercentage.toFixed(2)}%
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="text-gray-500 dark:text-gray-400">Avg Price</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(holding.avgPrice)}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 dark:text-gray-400">Current Price</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(holding.currentPrice)}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 dark:text-gray-400">Current Value</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(holding.currentValue)}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-500 dark:text-gray-400">P&L</p>
+                          <p className={`font-medium ${
+                            holding.pnl >= 0 ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {holding.pnl >= 0 ? '+' : ''}{formatCurrency(holding.pnl)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                </>
               ) : (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -430,41 +486,54 @@ const Portfolio = () => {
 
           {activeTab === 'transactions' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Transactions</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Transactions</h3>
 
               {transactions.length > 0 ? (
-                <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="space-y-3 sm:space-y-4">
                   {transactions.slice(0, 10).map((transaction) => (
-                    <div key={transaction.id} className="py-4 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    <div key={transaction.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg hover:border-groww-primary transition-all duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                             transaction.type === 'BUY' ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'
                           }`}>
                             {transaction.type === 'BUY' ? (
-                              <TrendingUp className={`w-5 h-5 text-green-600`} />
+                              <TrendingUp className="w-5 h-5 text-green-600" />
                             ) : (
-                              <TrendingDown className={`w-5 h-5 text-red-600`} />
+                              <TrendingDown className="w-5 h-5 text-red-600" />
                             )}
                           </div>
-                          <div>
-                            <p className="font-semibold text-gray-900 dark:text-white">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">
                               {transaction.type} {transaction.symbol}
                             </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                               {transaction.quantity} shares at {formatCurrency(transaction.price)}
+                            </p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                              {new Date(transaction.date).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
 
-                        <div className="text-right">
-                          <p className="font-semibold text-gray-900 dark:text-white">
+                        {/* Amount - Mobile */}
+                        <div className="sm:hidden">
+                          <p className={`font-semibold text-lg ${
+                            transaction.type === 'BUY' ? 'text-red-600' : 'text-green-600'
+                          }`}>
+                            {transaction.type === 'BUY' ? '-' : '+'}
                             {formatCurrency(transaction.total)}
                           </p>
-                          <div className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
-                            <Calendar className="w-3 h-3" />
-                            <span>{new Date(transaction.date).toLocaleDateString()}</span>
-                          </div>
+                        </div>
+
+                        {/* Amount - Desktop */}
+                        <div className="hidden sm:block text-right flex-shrink-0">
+                          <p className={`font-semibold text-lg ${
+                            transaction.type === 'BUY' ? 'text-red-600' : 'text-green-600'
+                          }`}>
+                            {transaction.type === 'BUY' ? '-' : '+'}
+                            {formatCurrency(transaction.total)}
+                          </p>
                         </div>
                       </div>
                     </div>

@@ -19,7 +19,7 @@ const Login = () => {
 
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
       setError(error.message || 'Login failed. Please try again.');
@@ -31,7 +31,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-groww-light to-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-groww-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-2xl">G</span>
@@ -50,7 +50,7 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent min-h-[44px]"
                 placeholder="Enter your email"
                 required
               />
@@ -66,14 +66,14 @@ const Login = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent pr-12"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-groww-primary focus:border-transparent pr-12 min-h-[44px]"
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -89,7 +89,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-groww-primary text-white py-3 rounded-lg font-semibold hover:bg-groww-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-groww-primary text-white py-3 rounded-lg font-semibold hover:bg-groww-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
